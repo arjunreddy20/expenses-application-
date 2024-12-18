@@ -6,6 +6,7 @@ const AuthController = {
         const { name, email, password } = req.body;
         bcrypt.hash(password, 10, (err, hashedPassword) => {
             if (err) return res.status(500).send('Error hashing password');
+            if (User.findByEmail) return res.status(500).send('email id already exists');
             User.create(name, email, hashedPassword, (err, result) => {
                 if (err) return res.status(500).send('Error creating user');
                 res.status(201).send('User created successfully');
