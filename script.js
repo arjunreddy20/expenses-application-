@@ -35,10 +35,20 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
         body: JSON.stringify({ email, password }),
     });
 
+    const result = await response.text()
+
     if (response.ok) {
-        document.getElementById('login').style.display = '';
-        document.getElementById('success').style.display = '';
+        alert("log in successful")
+        document.getElementById('login').style.display = 'none';
+        document.getElementById('success').style.display = 'block';
     } else {
-        alert("enter valid username and password");
+        if (result === "User not found"){
+            alert("email does not exists")
+        }
+        else if(result === "Invalid credentials"){
+            alert("Incorrect Password")
+        }else{
+            alert("enter valid username and password")
+        }
     }
 });
