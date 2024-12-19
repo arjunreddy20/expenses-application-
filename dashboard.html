@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <h3>Dashboard</h3>
+    <div id="dashboard" class="dashboard">
+        <form id="expenseForm" class="form">
+            <label for="amount"><strong>Amount:</strong> </label>
+            <input class="amo" type="number" id="amount" name="amount" placeholder="Choose Expense Amount" required/>
+            <br>
+            <br>
+            <label for="description"><strong>Description:</strong> </label>
+            <input class="des" type="text" id="description" name="description" placeholder="Choose description:" required/>
+            <br>
+            <br>
+            <label for="category"><strong>Choose a category:</strong></label>
+            <select class="options" id="category" name="category" required>
+                <option value="" disabled selected>Select</option>
+                <option value="food">Food</option>
+                <option value="petrol">Petrol</option>
+                <option value="hospital">Hospital</option>
+                <option value="rent">Rent</option>
+                <option value="shopping">Shopping</option>
+                <option value="travel">Travel</option>
+                <option value="party">Party</option>
+            </select>
+            <br>
+            <br>
+            <button id="addExpense" class="button" type="submit">Add Expense</button>
+            <br>
+            <br>
+        </form>
+        <ul class="list" id="expenseList"></ul>
+    </div> 
+    
+</body>
+<script src="../react/dashboard.js"></script>
+<script src="../react/login.js"></script>
+</html>
