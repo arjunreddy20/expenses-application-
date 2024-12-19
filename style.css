@@ -3,7 +3,7 @@ body {
     text-align: center;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-color: #99b693;
 }
 
 #app {
@@ -20,4 +20,12 @@ button {
     padding: 10px 20px;
     margin-top: 10px;
     cursor: pointer;
+    background-color: rgba(75, 170, 248, 0.96);
+    border-radius: 10%;
+    color: #f4f4f4;
+}
+.options{
+    margin-top: 10px;
+    padding: 10px;
+    width: 65%;
 }
