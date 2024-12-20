@@ -4,12 +4,14 @@ const cors = require('cors');
 const path = require('path');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
+const orderRoutes = require('./routes/orderRoutes');
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use('/api', authRoutes);
 app.use('/api', userRoutes);
+app.use('/api', orderRoutes);
 
 // Serve static files from the public folder
 app.use(express.static(path.join(__dirname, './public')));
