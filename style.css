@@ -38,6 +38,10 @@ h3 {
     justify-content: space-between; /* Space between text and button */
     align-items: center; /* Align vertically */
   }
+
+
+button:hover {
+
   .buyPremium {
     margin: 0; /* Reset margin */
     width: auto; /* Adjust width as needed */
@@ -49,5 +53,6 @@ h3 {
     cursor: pointer;
   }
 .buyPremium:hover{
+
     background-color: brown;
 }

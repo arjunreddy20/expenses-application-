@@ -2,6 +2,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const expenseForm = document.getElementById('expenseForm');
     const expenseList = document.getElementById('expenseList');
     const buyPremiumButton = document.getElementById('buyPremium');
+
+    const showLeaderboardButton = document.getElementById('showLeaderboard');
+    const leaderboard = document.getElementById('leaderboard');
+    const leaderboardList = document.getElementById('leaderboardList');
     const token = localStorage.getItem('token'); // Get token from localStorage
 
     // Fetch user details
@@ -24,6 +28,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         buyPremiumButton.addEventListener('click', () => {
             alert('You are using the premium');
         });
+
+        showLeaderboardButton.style.display = 'block';
+
     } else {
         buyPremiumButton.addEventListener('click', async () => {
             const response = await fetch('/api/create-order', {
@@ -96,6 +103,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             rzp1.open();
         });
+
+        showLeaderboardButton.style.display = 'none';
+
     }
 
     // Fetch and display old expenses
@@ -107,6 +117,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 'Content-Type': 'application/json'
             }
         });
+
+
+        if (!response.ok) {
+            const error = await response.json();
+            alert(error.message);
+            return;
+        }
+
+
         const expenses = await response.json();
         expenseList.innerHTML = '';
         expenses.forEach(expense => {
@@ -133,7 +152,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         if (!response.ok) {
+
+            const error = await response.json();
+            alert(error.message);
+
             alert('Error deleting expense');
+
         }
     };
 
@@ -154,6 +178,44 @@ document.addEventListener('DOMContentLoaded', async () => {
             },
             body: JSON.stringify({ amount, description, category }),
         });
+
+        if (!response.ok) {
+            const error = await response.json();
+            alert(error.message);
+            return;
+        }
+
+        await fetchExpenses();
+        expenseForm.reset();
+    });
+
+    // Handle showing leaderboard
+    showLeaderboardButton.addEventListener('click', async () => {
+        const response = await fetch('/api/leaderboard', {
+            method: 'GET',
+            headers: {
+                'Authorization': token,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            alert(error.message);
+            return;
+        }
+
+        const leaderboardData = await response.json();
+        leaderboardList.innerHTML = '';
+        leaderboardData.forEach(user => {
+            const li = document.createElement('li');
+            li.textContent = `${user.name} - Total Expenses: ${user.totalExpenses}`;
+            leaderboardList.appendChild(li);
+        });
+
+        leaderboard.style.display = 'block';
+    });
+});
 
         if (response.ok) {
             await fetchExpenses();

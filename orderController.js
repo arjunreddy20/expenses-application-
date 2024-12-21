@@ -4,7 +4,11 @@ const User = require('../models/userModel');
 
 const razorpay = new Razorpay({
     key_id: 'rzp_test_9qr0yuIvVRsWmo',
-    key_secret: 'eu7q2CFYL3jSKBQFF3QkMCAJ'
+
+    key_secret: 'xxx'
+
+   
+
 });
 
 const OrderController = {

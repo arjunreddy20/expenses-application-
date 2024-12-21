@@ -8,9 +8,13 @@
 </head>
 <body>
     <h3><strong>Dashboard</strong>
+
+        <button id="buyPremium" class="buyPremium">Buy Premium</button>
+        <button id="showLeaderboard" class="showLeaderboard">Show Leaderboard</button>
+    </h3>
+   
         <button id="buyPremium" class="buyPremium">Buy Premium</button></h3>
     
-
     <div id="dashboard" class="dashboard">
         <form id="expenseForm" class="form">
             <label for="amount"><strong>Amount:</strong> </label>
@@ -42,6 +46,13 @@
             <br>
         </form>
         <ul class="list" id="expenseList"></ul>
+        <div id="leaderboard" style="display: none;">
+            <h3>Leaderboard</h3>
+            <ul id="leaderboardList"></ul>
+        </div>
+    </div> 
+    
+</body>
         
         
     </div> 
