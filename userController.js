@@ -1,19 +1,25 @@
 const User = require('../models/userModel');
 
 const UserController = {
-    getUserDetails: (req, res) => {
+    getUserDetails: async (req, res) => {
         const userId = req.userId;
-        User.findById(userId, (err, user) => {
-            if (err) {
-                return res.status(500).send('Error fetching user details');
+
+        try {
+            const user = await User.findById(userId);
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
             }
+
             res.status(200).json({
-                name: user[0].name,
-                email: user[0].email,
-                isPremiumUser: user[0].isPremiumUser, // Assuming you have an isPremiumUser field
-                total_expenses: user[0].total_expenses // Ensure total_expenses is fetched
+                name: user.name,
+                email: user.email,
+                isPremiumUser: user.isPremiumUser, // Assuming you have an isPremiumUser field
+                total_expenses: user.total_expenses // Ensure total_expenses is fetched
             });
-        });
+        } catch (err) {
+            console.error('Error fetching user details:', err);
+            res.status(500).json({ message: 'Error fetching user details' });
+        }
     }
 };
 

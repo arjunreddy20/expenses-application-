@@ -1,13 +1,12 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const orderRoutes = require('./routes/orderRoutes');
-
 const leaderboardRoutes = require('./routes/leaderboardRoutes');
 const path = require('path');
-
 
 const app = express();
 app.use(cors());
@@ -15,9 +14,7 @@ app.use(bodyParser.json());
 app.use('/api', authRoutes);
 app.use('/api', userRoutes);
 app.use('/api', orderRoutes);
-
 app.use('/api', leaderboardRoutes);
-
 
 // Serve static files from the public folder
 app.use(express.static(path.join(__dirname, './public')));

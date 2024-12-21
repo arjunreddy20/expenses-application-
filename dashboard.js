@@ -16,6 +16,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 'Content-Type': 'application/json'
             }
         });
+
+        if (!response.ok) {
+            const error = await response.json();
+            alert(error.message);
+            return;
+        }
+
         return await response.json();
     };
 
