@@ -3,7 +3,7 @@ body {
     text-align: center;
     margin: 0;
     padding: 0;
-    background-color: #99b693;
+    background-color: #a49ea1;
 }
 
 #app {
@@ -20,7 +20,7 @@ button {
     padding: 10px 20px;
     margin-top: 10px;
     cursor: pointer;
-    background-color: rgba(75, 170, 248, 0.96);
+    background-color:  rgb(89, 103, 67);
     border-radius: 10%;
     color: #f4f4f4;
 }
@@ -28,4 +28,17 @@ button {
     margin-top: 10px;
     padding: 10px;
     width: 65%;
+}
+h3 {
+    margin-top: 0;
+    background-color: rgb(89, 103, 67);
+    padding: 20px;
+    color: #f4f4f4;
+    display: flex; /* Use flexbox to position the button inside the header */
+    justify-content: space-between; /* Space between text and button */
+    align-items: center; /* Align vertically */
+  }
+
+button:hover {
+    background-color: brown;
 }

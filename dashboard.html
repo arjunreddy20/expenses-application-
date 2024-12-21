@@ -7,7 +7,11 @@
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    <h3>Dashboard</h3>
+    <h3><strong>Dashboard</strong>
+        <button id="buyPremium" class="buyPremium">Buy Premium</button>
+        <button id="showLeaderboard" class="showLeaderboard">Show Leaderboard</button>
+    </h3>
+    
     <div id="dashboard" class="dashboard">
         <form id="expenseForm" class="form">
             <label for="amount"><strong>Amount:</strong> </label>
@@ -23,11 +27,10 @@
                 <option value="" disabled selected>Select</option>
                 <option value="food">Food</option>
                 <option value="petrol">Petrol</option>
-                <option value="hospital">Hospital</option>
+                <option value="salary">Salary</option>
                 <option value="rent">Rent</option>
                 <option value="shopping">Shopping</option>
                 <option value="travel">Travel</option>
-                <option value="party">Party</option>
             </select>
             <br>
             <br>
@@ -36,9 +39,14 @@
             <br>
         </form>
         <ul class="list" id="expenseList"></ul>
+        <div id="leaderboard" style="display: none;">
+            <h3>Leaderboard</h3>
+            <ul id="leaderboardList"></ul>
+        </div>
     </div> 
     
+    <script src="../react/dashboard.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="../react/login.js"></script>
 </body>
-<script src="../react/dashboard.js"></script>
-<script src="../react/login.js"></script>
 </html>
