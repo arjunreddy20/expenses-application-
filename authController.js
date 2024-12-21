@@ -1,47 +1,50 @@
 const User = require('../models/userModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 const AuthController = {
-    signup: (req, res) => {
+    signup: async (req, res) => {
         const { name, email, password } = req.body;
 
-        // Check if the email already exists
-        User.findByEmail(email, (err, existingUser) => {
-            if (err) {
-                console.error(err);
-                return res.status(500).json({ message: 'Error checking email' });
-            }
-
-            if (existingUser.length > 0) {
+        try {
+            // Check if the email already exists
+            const existingUser = await User.findByEmail(email);
+            if (existingUser) {
                 return res.status(400).json({ message: 'Email id already exists' });
             }
 
-            bcrypt.hash(password, 10, (err, hashedPassword) => {
-                if (err) return res.status(500).json({ message: 'Error hashing password' });
+            const hashedPassword = await bcrypt.hash(password, 10);
 
-                // Create the user in the database
-                User.create(name, email, hashedPassword, (err, result) => {
-                    if (err) return res.status(500).json({ message: 'Error creating user' });
-                    res.status(201).send('User created successfully');
-                });
-            });
-        });
+            // Create the user in the database
+            await User.create({ name, email, password: hashedPassword });
+            res.status(201).json({ message: 'User created successfully' });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ message: 'Error creating user' });
+        }
     },
-    login: (req, res) => {
+    login: async (req, res) => {
         const { email, password } = req.body;
-        User.findByEmail(email, (err, results) => {
-            if (err) return res.status(500).json({ message: 'Error fetching user' });
-            if (results.length === 0) return res.status(401).json({ message: 'User not found' });
-            bcrypt.compare(password, results[0].password, (err, isMatch) => {
-                if (err) return res.status(500).json({ message: 'Error comparing passwords' });
-                if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
 
-                // Generate JWT token
-                const token = jwt.sign({ userId: results[0].id }, "private_key");
-                res.status(200).json({ token, message: 'Login successful' });
-            });
-        });
+        try {
+            const user = await User.findByEmail(email);
+            if (!user) {
+                return res.status(401).json({ message: 'User not found' });
+            }
+
+            const isMatch = await bcrypt.compare(password, user.password);
+            if (!isMatch) {
+                return res.status(401).json({ message: 'Invalid credentials' });
+            }
+
+            // Generate JWT token
+            const token = jwt.sign({ userId: user.id }, process.env.PRIVATE_KEY);
+            res.status(200).json({ token, message: 'Login successful' });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ message: 'Error logging in' });
+        }
     },
 };
 

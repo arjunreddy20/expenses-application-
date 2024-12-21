@@ -2,13 +2,11 @@ const Razorpay = require('razorpay');
 const Order = require('../models/orderModel');
 const User = require('../models/userModel');
 
+require('dotenv').config();
+
 const razorpay = new Razorpay({
-    key_id: 'rzp_test_9qr0yuIvVRsWmo',
-
-    key_secret: 'xxx'
-
-   
-
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET
 });
 
 const OrderController = {
@@ -40,7 +38,7 @@ const OrderController = {
                 return res.status(500).json({ error: 'Error updating order status' });
             }
             if (newStatus === 'SUCCESSFUL') {
-                await User.updatePremiumStatus(req.userId, true);
+                await User.update({ isPremiumUser: true }, { where: { id: req.userId } });
             }
             res.status(200).json({ message: 'Order status updated' });
         });

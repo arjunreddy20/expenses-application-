@@ -1,26 +1,40 @@
-const db = require('../db');
+const { Sequelize, DataTypes } = require('sequelize');
+const sequelize = require('../db');
 
-const User = {
-    create: (name, email, password, callback) => {
-        const query = 'INSERT INTO userlogin (name, email, password) VALUES (?, ?, ?)';
-        db.query(query, [name, email, password], callback);
+const User = sequelize.define('User', {
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false
     },
-    findByEmail: (email, callback) => {
-        const query = 'SELECT * FROM userlogin WHERE email = ?';
-        db.query(query, [email], callback);
+    email: {
+        type: DataTypes.STRING,
+        allowNull: false
     },
-    findById: (id, callback) => {
-        const query = 'SELECT * FROM userlogin WHERE id = ?';
-        db.query(query, [id], callback);
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false
     },
-    updatePremiumStatus: (userId, isPremiumUser, callback) => {
-        const query = 'UPDATE userlogin SET isPremiumUser = ? WHERE id = ?';
-        db.query(query, [isPremiumUser, userId], callback);
+    isPremiumUser: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
     },
-    getAllUsers: (callback) => {
-        const query = 'SELECT id, name, email, total_expenses FROM userlogin';
-        db.query(query, callback);
+    total_expenses: {
+        type: DataTypes.DECIMAL(10, 2),
+        defaultValue: 0.00
     }
+}, {
+    tableName: 'userlogin',
+    timestamps: false
+});
+
+// Add the findByEmail method
+User.findByEmail = async function(email) {
+    return await User.findOne({ where: { email } });
+};
+
+// Add the findById method
+User.findById = async function(id) {
+    return await User.findOne({ where: { id } });
 };
 
 module.exports = User;
