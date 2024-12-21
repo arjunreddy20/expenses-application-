@@ -16,13 +16,10 @@ const User = {
     updatePremiumStatus: (userId, isPremiumUser, callback) => {
         const query = 'UPDATE userlogin SET isPremiumUser = ? WHERE id = ?';
         db.query(query, [isPremiumUser, userId], callback);
-
     },
     getAllUsers: (callback) => {
-        const query = 'SELECT * FROM userlogin';
+        const query = 'SELECT id, name, email, total_expenses FROM userlogin';
         db.query(query, callback);
-
-
     }
 };
 
