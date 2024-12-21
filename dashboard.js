@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const expenseForm = document.getElementById('expenseForm');
     const expenseList = document.getElementById('expenseList');
     const buyPremiumButton = document.getElementById('buyPremium');
+
     const showLeaderboardButton = document.getElementById('showLeaderboard');
     const leaderboard = document.getElementById('leaderboard');
     const leaderboardList = document.getElementById('leaderboardList');
@@ -27,7 +28,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         buyPremiumButton.addEventListener('click', () => {
             alert('You are using the premium');
         });
+
         showLeaderboardButton.style.display = 'block';
+
     } else {
         buyPremiumButton.addEventListener('click', async () => {
             const response = await fetch('/api/create-order', {
@@ -100,7 +103,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             rzp1.open();
         });
+
         showLeaderboardButton.style.display = 'none';
+
     }
 
     // Fetch and display old expenses
@@ -113,11 +118,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
 
+
         if (!response.ok) {
             const error = await response.json();
             alert(error.message);
             return;
         }
+
 
         const expenses = await response.json();
         expenseList.innerHTML = '';
@@ -145,8 +152,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         if (!response.ok) {
+
             const error = await response.json();
             alert(error.message);
+
+            alert('Error deleting expense');
+
         }
     };
 
@@ -203,5 +214,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         leaderboard.style.display = 'block';
+    });
+});
+
+        if (response.ok) {
+            await fetchExpenses();
+            expenseForm.reset();
+        } else {
+            alert('Error adding expense');
+        }
     });
 });

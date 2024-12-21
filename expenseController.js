@@ -5,12 +5,20 @@ const ExpenseController = {
         const { amount, description, category } = req.body;
         const userId = req.userId; // Extracted from token
         console.log('Adding expense for user ID:', userId); // Log the user ID to ensure it's correct
+
         Expense.create(amount, description, category, userId, (err, result) => {
             if (err) {
                 console.error('Error adding expense:', err);
                 return res.status(500).json({ message: 'Error adding expense' });
             }
             res.status(201).json({ message: 'Expense added successfully' });
+
+        Expense.create(userId, amount, description, category, (err, result) => {
+            if (err) {
+                console.error('Error adding expense:', err);
+                return res.status(500).send('Error adding expense');
+            }
+            res.status(201).send('Expense added successfully');
         });
     },
     getExpenses: (req, res) => {
@@ -18,7 +26,11 @@ const ExpenseController = {
         Expense.getAllByUserId(userId, (err, results) => {
             if (err) {
                 console.error('Error fetching expenses:', err);
+
                 return res.status(500).json({ message: 'Error fetching expenses' });
+
+                return res.status(500).send('Error fetching expenses');
+
             }
             res.status(200).json(results);
         });
@@ -28,9 +40,15 @@ const ExpenseController = {
         Expense.delete(id, (err, result) => {
             if (err) {
                 console.error('Error deleting expense:', err);
+
                 return res.status(500).json({ message: 'Error deleting expense' });
             }
             res.status(200).json({ message: 'Expense deleted successfully' });
+
+                return res.status(500).send('Error deleting expense');
+            }
+            res.status(200).send('Expense deleted successfully');
+
         });
     },
 };
