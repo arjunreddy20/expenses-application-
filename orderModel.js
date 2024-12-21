@@ -1,18 +1,46 @@
-const db = require('../db');
+const { Sequelize, DataTypes } = require('sequelize');
+const sequelize = require('../db');
 
-const Order = {
-    create: (orderId, userId, callback) => {
-        const query = 'INSERT INTO orders (orderId, userId) VALUES (?, ?)';
-        db.query(query, [orderId, userId], callback);
+const Order = sequelize.define('Order', {
+    paymentId: {
+        type: DataTypes.STRING,
+        allowNull: true
     },
-    updateStatus: (orderId, status, paymentId, callback) => {
-        const query = 'UPDATE orders SET status = ?, paymentId = ? WHERE orderId = ?';
-        db.query(query, [status, paymentId, orderId], callback);
+    orderId: {
+        type: DataTypes.STRING,
+        allowNull: false
     },
-    findByOrderId: (orderId, callback) => {
-        const query = 'SELECT * FROM orders WHERE orderId = ?';
-        db.query(query, [orderId], callback);
+    status: {
+        type: DataTypes.ENUM('PENDING', 'SUCCESSFUL', 'FAILED'),
+        defaultValue: 'PENDING'
     },
+    userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'userlogin',
+            key: 'id'
+        }
+    }
+}, {
+    tableName: 'orders',
+    timestamps: false
+});
+
+// Add the functions
+Order.createOrder = async function(orderId, userId) {
+    return await Order.create({ orderId, userId });
+};
+
+Order.updateStatus = async function(orderId, status, paymentId) {
+    return await Order.update(
+        { status, paymentId },
+        { where: { orderId } }
+    );
+};
+
+Order.findByOrderId = async function(orderId) {
+    return await Order.findOne({ where: { orderId } });
 };
 
 module.exports = Order;

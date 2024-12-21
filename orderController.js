@@ -10,38 +10,34 @@ const razorpay = new Razorpay({
 });
 
 const OrderController = {
-    createOrder: (req, res) => {
+    createOrder: async (req, res) => {
         const userId = req.userId;
         const options = {
             amount: 50000, // amount in the smallest currency unit
             currency: "INR",
             receipt: `receipt_order_${userId}`
         };
-        razorpay.orders.create(options, (err, order) => {
-            if (err) {
-                console.log(err);
-                return res.status(500).json({ error: 'Error creating order', details: err });
-            }
-            Order.create(order.id, userId, (err, result) => {
-                if (err) {
-                    return res.status(500).json({ error: 'Error saving order' });
-                }
-                res.status(201).json({ orderId: order.id });
-            });
-        });
+        try {
+            const order = await razorpay.orders.create(options);
+            await Order.createOrder(order.id, userId);
+            res.status(201).json({ orderId: order.id });
+        } catch (err) {
+            console.log(err);
+            res.status(500).json({ error: 'Error creating order', details: err });
+        }
     },
     updateOrderStatus: async (req, res) => {
         const { orderId, paymentId, status } = req.body;
         const newStatus = status === 'success' ? 'SUCCESSFUL' : 'FAILED';
-        Order.updateStatus(orderId, newStatus, paymentId, async (err, result) => {
-            if (err) {
-                return res.status(500).json({ error: 'Error updating order status' });
-            }
+        try {
+            await Order.updateStatus(orderId, newStatus, paymentId);
             if (newStatus === 'SUCCESSFUL') {
                 await User.update({ isPremiumUser: true }, { where: { id: req.userId } });
             }
             res.status(200).json({ message: 'Order status updated' });
-        });
+        } catch (err) {
+            res.status(500).json({ error: 'Error updating order status' });
+        }
     }
 };
 

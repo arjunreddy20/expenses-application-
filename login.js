@@ -3,6 +3,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const goToSignup = document.getElementById('goToSignup');
     const signupForm = document.getElementById('signupForm');
     const loginForm = document.getElementById('loginForm');
+    const forgotPasswordButton = document.getElementById('forgotPassword');
+    const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+    const forgotPasswordFormElement = document.getElementById('forgotPasswordFormElement');
+    const backToLogin = document.getElementById('backToLogin');
 
     if (goToLogin) {
         goToLogin.addEventListener('click', () => {
@@ -69,6 +73,36 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert("enter valid username and password");
                 }
             }
+        });
+    }
+
+    if (forgotPasswordButton) {
+        forgotPasswordButton.addEventListener('click', () => {
+            document.getElementById('login').style.display = 'none';
+            document.getElementById('forgotPasswordForm').style.display = 'block';
+        });
+    }
+
+    if (backToLogin) {
+        backToLogin.addEventListener('click', () => {
+            document.getElementById('forgotPasswordForm').style.display = 'none';
+            document.getElementById('login').style.display = 'block';
+        });
+    }
+
+    if (forgotPasswordFormElement) {
+        forgotPasswordFormElement.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('forgotPasswordEmail').value;
+
+            const response = await fetch('/api/password/forgotpassword', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email }),
+            });
+
+            const result = await response.json();
+            alert(result.message);
         });
     }
 });
