@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const forgotPasswordForm = document.getElementById('forgotPasswordForm');
     const forgotPasswordFormElement = document.getElementById('forgotPasswordFormElement');
     const backToLogin = document.getElementById('backToLogin');
+    const resetPasswordForm = document.getElementById('resetPasswordForm');
+    const resetPasswordFormElement = document.getElementById('resetPasswordFormElement');
 
     if (goToLogin) {
         goToLogin.addEventListener('click', () => {
@@ -105,4 +107,5 @@ document.addEventListener('DOMContentLoaded', () => {
             alert(result.message);
         });
     }
+
 });
