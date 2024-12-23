@@ -1,11 +1,10 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../db');
-const { v4: uuidv4 } = require('uuid');
 
 const ForgotPasswordRequests = sequelize.define('ForgotPasswordRequests', {
     id: {
         type: DataTypes.UUID,
-        defaultValue: uuidv4,
+        defaultValue: Sequelize.UUIDV4,
         primaryKey: true
     },
     userId: {
@@ -19,6 +18,14 @@ const ForgotPasswordRequests = sequelize.define('ForgotPasswordRequests', {
     isActive: {
         type: DataTypes.BOOLEAN,
         defaultValue: true
+    },
+    createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: Sequelize.NOW
+    },
+    updatedAt: {
+        type: DataTypes.DATE,
+        defaultValue: Sequelize.NOW
     }
 }, {
     tableName: 'forgot_password_requests',

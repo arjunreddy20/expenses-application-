@@ -1,4 +1,66 @@
 body {
+    background-color: #f0f8ff;
+    font-family: Arial, sans-serif;
+}
+
+#app {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1, h2 {
+    text-align: center;
+    color: #333;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background-color: #fff;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+tfoot td {
+    font-weight: bold;
+}
+
+#monthlyTable tbody tr.salary {
+    background-color: #e0f7fa;
+}
+
+#yearlyTable tfoot td {
+    color: green;
+}
+
+#downloadButton {
+    display: block;
+    margin: 0 auto;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+#downloadButton:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+
+body {
     font-family: Arial, sans-serif;
     text-align: center;
     margin: 0;
@@ -34,11 +96,21 @@ h3 {
     background-color: rgb(89, 103, 67);
     padding: 20px;
     color: #f4f4f4;
-    display: flex; /* Use flexbox to position the button inside the header */
-    justify-content: space-between; /* Space between text and button */
-    align-items: center; /* Align vertically */
+    display: flex; 
+    justify-content: space-between;
+    align-items: center; 
   }
 
 button:hover {
     background-color: brown;
+}
+.salary-row {
+    background-color: #dff0d8;
+    color: #3c763d; 
+}
+.insights-head{
+    background-color: rgb(89, 103, 67);
+    padding: 20px;
+    color: #f4f4f4;
+    margin-top: 0px;
 }
