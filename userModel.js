@@ -2,13 +2,19 @@ const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../db');
 
 const User = sequelize.define('User', {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
     name: {
         type: DataTypes.STRING,
         allowNull: false
     },
     email: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
     password: {
         type: DataTypes.STRING,
@@ -20,7 +26,7 @@ const User = sequelize.define('User', {
     },
     total_expenses: {
         type: DataTypes.DECIMAL(10, 2),
-        defaultValue: 0.00
+        defaultValue: 0
     }
 }, {
     tableName: 'userlogin',

@@ -23,6 +23,10 @@ app.get('/password/resetpassword/:id', (req, res) => {
     res.sendFile(path.join(__dirname, './public/html/resetpassword.html'));
 });
 
+app.get('/insights', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/html/insights.html'));
+});
+
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, './public/html/index.html'));
 });
