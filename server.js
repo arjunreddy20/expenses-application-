@@ -19,7 +19,11 @@ app.use('/api', leaderboardRoutes);
 // Serve static files from the public folder
 app.use(express.static(path.join(__dirname, './public')));
 
-app.get('*', (req, res) => {
+app.get('/password/resetpassword/:id', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/html/resetpassword.html'));
+});
+
+app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, './public/html/index.html'));
 });
 
