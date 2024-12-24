@@ -8,8 +8,10 @@ require('dotenv').config();
 
 const ExpenseController = {
     getMonthlyExpenses: async (req, res) => {
+        const { page = 1, limit = 10 } = req.query; // Get page and limit from query parameters
+
         try {
-            const expenses = await Expense.findAll({
+            const { count, rows: expenses } = await Expense.findAndCountAll({
                 where: { user_id: req.userId },
                 attributes: [
                     'id',
@@ -18,7 +20,9 @@ const ExpenseController = {
                     'category',
                     'amount'
                 ],
-                order: [['created_at', 'ASC']]
+                order: [['created_at', 'ASC']],
+                limit: parseInt(limit),
+                offset: (page - 1) * limit
             });
 
             const totalExpenses = await Expense.findAll({
@@ -27,8 +31,10 @@ const ExpenseController = {
                     [sequelize.fn('SUM', sequelize.col('amount')), 'total_expense']
                 ]
             });
+            
+            const totalPages = Math.ceil(count / limit);
 
-            res.status(200).json({ expenses, totalExpenses: totalExpenses[0].dataValues.total_expense });
+            res.status(200).json({ expenses, totalExpenses: totalExpenses[0].dataValues.total_expense, totalPages, currentPage: parseInt(page) });
         } catch (err) {
             console.error('Error fetching monthly expenses:', err);
             res.status(500).json({ message: 'Error fetching monthly expenses' });
