@@ -1,7 +1,7 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../db');
 
-const Expense = sequelize.define('Expense', {
+const FileUrl = sequelize.define('FileUrl', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -15,25 +15,18 @@ const Expense = sequelize.define('Expense', {
             key: 'id'
         }
     },
-    amount: {
-        type: DataTypes.DECIMAL(10, 2),
-        allowNull: false
-    },
-    description: {
+    file_url: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    category: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    created_at: {
+    download_date: {
         type: DataTypes.DATE,
+        allowNull: false,
         defaultValue: Sequelize.NOW
     }
 }, {
-    tableName: 'expenses',
-    timestamps: false
+    timestamps: false,
+    tableName: 'file_urls'
 });
 
-module.exports = Expense;
+module.exports = FileUrl;
