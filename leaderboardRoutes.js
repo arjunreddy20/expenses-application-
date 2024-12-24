@@ -1,8 +1,8 @@
 const express = require('express');
-const router = express.Router();
 const LeaderboardController = require('../controllers/leaderboardController');
-const authenticate = require('../middleware/leaderAuthenticate');
+const userAuthentication = require('../middleware/userAuthentication');
+const router = express.Router();
 
-router.get('/leaderboard', authenticate, LeaderboardController.getLeaderboard);
+router.get('/leaderboard', userAuthentication, LeaderboardController.getLeaderboard);
 
 module.exports = router;

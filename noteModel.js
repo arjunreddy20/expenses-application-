@@ -1,13 +1,13 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../db');
 
-const Expense = sequelize.define('Expense', {
+const Note = sequelize.define('Note', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true
     },
-    user_id: {
+    userId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
@@ -15,25 +15,17 @@ const Expense = sequelize.define('Expense', {
             key: 'id'
         }
     },
-    amount: {
-        type: DataTypes.DECIMAL(10, 2),
+    date: {
+        type: DataTypes.DATEONLY,
         allowNull: false
     },
-    description: {
-        type: DataTypes.STRING,
+    note: {
+        type: DataTypes.TEXT,
         allowNull: false
-    },
-    category: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    created_at: {
-        type: DataTypes.DATE,
-        defaultValue: Sequelize.NOW
     }
 }, {
-    tableName: 'expenses',
+    tableName: 'notes',
     timestamps: false
 });
 
-module.exports = Expense;
+module.exports = Note;

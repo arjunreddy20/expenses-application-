@@ -6,11 +6,16 @@ const sequelize = new Sequelize('expenses_app', 'root', '12345678', {
 });
 
 sequelize.authenticate()
-    .then(() => {
-        console.log('Connected to MySQL using Sequelize');
-    })
-    .catch(err => {
-        console.error('Error connecting to MySQL:', err);
-    });
+.then(() => {
+    console.log('Connection has been established successfully.');
+    return sequelize.sync(); // Sync all models
+})
+.then(() => {
+    console.log('Database & tables created!');
+})
+.catch(err => {
+    console.error('Unable to connect to the database:', err);
+});
+
 
 module.exports = sequelize;
