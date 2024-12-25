@@ -78,6 +78,16 @@ input {
     padding: 10px;
     width: 80%;
 }
+textarea {
+    margin: 2px;
+    padding: 10px;
+    width: 80%;
+}
+.date{
+    margin: 5px;
+    padding: 10px;
+    width: 20%;
+}
 
 button {
     padding: 10px 20px;

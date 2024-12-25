@@ -13,7 +13,7 @@ const OrderController = {
     createOrder: async (req, res) => {
         const userId = req.userId;
         const options = {
-            amount: 50000, // amount in the smallest currency unit
+            amount: 2500, // amount in the smallest currency unit
             currency: "INR",
             receipt: `receipt_order_${userId}`
         };

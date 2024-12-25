@@ -48,6 +48,7 @@
             <br>
             <br>
         </form>
+
         <div>
             <label for="expensesPerPage"><strong>Expenses per page:</strong> </label>
             <select id="expensesPerPage">
@@ -60,10 +61,18 @@
         </div>
         <div id="paginationContainer"></div>
         <ul class="list" id="expenseList"></ul>
+        <form>
+            <div class="noteForm">
+                <input type="date" id="date" class="date" placeholder="dd/mm/yyyy" required/><br><br>
+                <textarea name="note" id="note" placeholder="Add Note Here" required></textarea><br><br>
+                <button id="addNote" class="button" type="submit">Add Note</button><br><br>
+            </div>
+        </form>
         <div id="leaderboard" style="display: none;">
             <h3>Leaderboard</h3>
             <ul id="leaderboardList"></ul>
         </div>
+
     </div> 
     
     <script src="../react/dashboard.js"></script>
