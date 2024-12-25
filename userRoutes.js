@@ -10,6 +10,7 @@ router.get('/user-details', userAuthentication, UserController.getUserDetails);
 router.get('/expenses/monthly', userAuthentication, ExpenseController.getMonthlyExpenses);
 router.get('/expenses/yearly', userAuthentication, ExpenseController.getYearlyExpenses);
 router.get('/notes', userAuthentication, NoteController.getNotes);
+router.post('/notes', userAuthentication, NoteController.addNote);
 router.get('/expenses/download', userAuthentication, ExpenseController.downloadExpenses);
 router.post('/expenses', userAuthentication, ExpenseController.addExpense);
 router.get('/expenses/all-monthly', userAuthentication, ExpenseController.getAllMonthlyExpenses);

@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const options = {
                 key: 'rzp_test_9qr0yuIvVRsWmo',
-                amount: 50000,
+                amount: 2500,
                 currency: 'INR',
                 name: 'Expense App',
                 description: 'Premium Membership',
@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             rzp1.open();
         });
         showLeaderboardButton.style.display = 'none';
-    }
+        }
 
 
         let expensesPerPage = localStorage.getItem('expensesPerPage') || 10;
@@ -136,8 +136,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
     
             const { expenses, totalExpenses, totalPages, currentPage } = await response.json();
-            console.log(expenses);
-            console.log('----------------------------Fetched expenses:', expenses); 
+            //console.log(expenses);
+            //console.log('----------------------------Fetched expenses:', expenses); 
             expenseList.innerHTML = '';
             if (Array.isArray(expenses)) {
                 expenses.forEach(expense => {
@@ -276,4 +276,27 @@ document.addEventListener('DOMContentLoaded', async () => {
             localStorage.setItem('expensesPerPage', expensesPerPage);
             await fetchExpenses(currentPage);
         });
+
+        document.getElementById("addNote").addEventListener("click", async () => {
+            const note = document.getElementById("note").value;
+            const date = document.getElementById("date").value;
+
+            const response = await fetch('/api/notes', {
+                method: 'POST',
+                headers: {  
+                    'Authorization': token,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ note, date })
+            });
+            
+            if (!response.ok) {
+                const error = await response.json();
+                alert(error.message);
+                return;
+            }
+            alert('Note added successfully');
+            document.getElementById("note").value = '';
+            document.getElementById("date").value = '';
+        })
     });
