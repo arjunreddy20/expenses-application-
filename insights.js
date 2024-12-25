@@ -33,13 +33,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Fetch monthly expenses from localStorage
     const monthlyExpensesData = JSON.parse(localStorage.getItem('monthlyExpenses'));
-    if (!monthlyExpensesData || !monthlyExpensesData.expenses) {
+    if (!monthlyExpensesData ) {
         alert('No monthly expenses data found');
         return;
     }
 
-    const monthlyExpenses = monthlyExpensesData.expenses;
-    const totalMonthlyExpense = monthlyExpensesData.totalExpenses;
+    const monthlyExpenses = monthlyExpensesData;
+    //const totalMonthlyExpense = monthlyExpensesData.totalExpenses;
     let totalIncome = 0;
     let totalExpense = 0;
 
@@ -51,20 +51,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             <td>${expense.category}</td>
             <td>${expense.amount}</td>
         `;
-        if (expense.category.toLowerCase() === 'salary') {
-            tr.classList.add('salary-row');
-            totalIncome += expense.amount;
-        } else {
-            totalExpense += expense.amount;
-        }
         monthlyTableBody.appendChild(tr);
+
+        if (expense.category.toLowerCase() === 'salary') {
+            totalIncome += parseFloat(expense.amount);
+        } else {
+            totalExpense += parseFloat(expense.amount);
+        }
+       
     });
 
-    const monthlyExpense = totalMonthlyExpense-totalIncome;
 
-    document.getElementById('totalIncome').textContent = totalIncome;
-    document.getElementById('totalExpense').textContent = monthlyExpense
-    document.getElementById('totalSavings').textContent = totalIncome - monthlyExpense;
+    document.getElementById('totalIncome').textContent = totalIncome.toFixed(2);
+    document.getElementById('totalExpense').textContent = totalExpense.toFixed(2);
+    document.getElementById('totalSavings').textContent = (totalIncome - totalExpense).toFixed(2);
 
     // Fetch yearly expenses
     const fetchYearlyExpenses = async () => {

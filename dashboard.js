@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const leaderboard = document.getElementById('leaderboard');
     const leaderboardList = document.getElementById('leaderboardList');
     const viewInsightsButton = document.getElementById('viewInsights');
+    const expensesPerPageSelect = document.getElementById('expensesPerPage');
     const token = localStorage.getItem('token'); // Get token from localStorage
 
     // Fetch user details
@@ -111,137 +112,168 @@ document.addEventListener('DOMContentLoaded', async () => {
         showLeaderboardButton.style.display = 'none';
     }
 
-    // Fetch and display old expenses
-    const fetchExpenses = async () => {
-        console.log('-------------------------------fetchExpenses function called------------------'); 
-        const response = await fetch('/api/expenses/monthly', {
-            method: 'GET',
-            headers: {
-                'Authorization': token,
-                'Content-Type': 'application/json'
-            }
-        });
 
-        if (!response.ok) {
-            const error = await response.json();
-            alert(error.message);
-            return;
-        }
+        let expensesPerPage = localStorage.getItem('expensesPerPage') || 10;
+        expensesPerPageSelect.value = expensesPerPage;
 
-        const expenses = await response.json();
+    
+        let currentPage = 1;
         
-        console.log(expenses);
-        console.log('----------------------------Fetched expenses:', expenses); 
-        expenseList.innerHTML = '';
-        expenses.expenses.forEach(expense => {
-            const li = document.createElement('li');
-            li.textContent = `${expense.amount} - ${expense.description} - ${expense.category}`;
-            const deleteButton = document.createElement('button');
-            deleteButton.textContent = 'Delete';
-            console.log(expense.id)
-            deleteButton.addEventListener('click', async () => {
-                console.log(`Deleting expense with id: ${expense.id}`);
-                await deleteExpense(expense.id);
-                await fetchExpenses();
+    
+        const fetchExpenses = async (page = 1) => {
+            const response = await fetch(`/api/expenses/monthly?page=${page}&limit=${expensesPerPage}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': token,
+                    'Content-Type': 'application/json'
+                }
             });
-            li.appendChild(deleteButton);
-            expenseList.appendChild(li);
-        });
-    };
-
-    const deleteExpense = async (id) => {
-        console.log(`Sending DELETE request for id: ${id}`);
-        const response = await fetch(`/api/expenses/monthly/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': token,
-                'Content-Type': 'application/json'
+    
+            if (!response.ok) {
+                const error = await response.json();
+                alert(error.message);
+                return;
             }
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            alert(error.message);
-        } else {
-            console.log(`Expense with id: ${id} deleted successfully`);
-        }
-    };
-
-    await fetchExpenses();
-
-    // Handle adding new expense
-    expenseForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const amount = document.getElementById('amount').value;
-        const description = document.getElementById('description').value;
-        const category = document.getElementById('category').value;
-
-        const response = await fetch('/api/expenses', {
-            method: 'POST',
-            headers: {
-                'Authorization': token,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ amount, description, category })
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            alert(error.message);
-            return;
-        }
-
-        await fetchExpenses();
-        expenseForm.reset();
-    });
-
-    // Handle showing leaderboard
-    showLeaderboardButton.addEventListener('click', async () => {
-        await updateLeaderboard();
-        leaderboard.style.display = 'block';
-    });
-
-    const updateLeaderboard = async () => {
-        const response = await fetch('/api/leaderboard', {
-            method: 'GET',
-            headers: {
-                'Authorization': token,
-                'Content-Type': 'application/json'
+    
+            const { expenses, totalExpenses, totalPages, currentPage } = await response.json();
+            console.log(expenses);
+            console.log('----------------------------Fetched expenses:', expenses); 
+            expenseList.innerHTML = '';
+            if (Array.isArray(expenses)) {
+                expenses.forEach(expense => {
+                    const li = document.createElement('li');
+                    li.textContent = `${expense.amount} - ${expense.description} - ${expense.category}`;
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Delete';
+                    console.log(expense.id)
+                    deleteButton.addEventListener('click', async () => {
+                        console.log(`Deleting expense with id: ${expense.id}`);
+                        await deleteExpense(expense.id);
+                        await fetchExpenses(currentPage); // Ensure the current page is fetched again
+                    });
+                    li.appendChild(deleteButton);
+                    expenseList.appendChild(li);
+                });
             }
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            alert(error.message);
-            return;
-        }
-
-        const leaderboardData = await response.json();
-        leaderboardList.innerHTML = '';
-        leaderboardData.forEach(user => {
-            const li = document.createElement('li');
-            li.textContent = `${user.name} - Total Expenses: ${user.total_expenses}`;
-            leaderboardList.appendChild(li);
-        });
-    };
-
-    viewInsightsButton.addEventListener('click', async () => {
-        const response = await fetch('/api/expenses/monthly', {
-            method: 'GET',
-            headers: {
-                'Authorization': token,
-                'Content-Type': 'application/json'
+            updatePagination(totalPages, currentPage);
+        };
+    
+        const updatePagination = (totalPages, currentPage) => {
+            paginationContainer.innerHTML = '';
+    
+            for (let i = 1; i <= totalPages; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.textContent = i;
+                pageButton.disabled = i === currentPage;
+                pageButton.addEventListener('click', () => {
+                    fetchExpenses(i);
+                });
+                paginationContainer.appendChild(pageButton);
             }
+        };
+    
+        // Initial fetch
+        fetchExpenses(currentPage);
+    
+        const deleteExpense = async (id) => {
+            console.log(`Sending DELETE request for id: ${id}`);
+            const response = await fetch(`/api/expenses/monthly/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': token,
+                    'Content-Type': 'application/json'
+                }
+            });
+    
+            if (!response.ok) {
+                const error = await response.json();
+                alert(error.message);
+            } else {
+                console.log(`Expense with id: ${id} deleted successfully`);
+            }
+        };
+    
+        // Handle adding new expense
+        expenseForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const amount = document.getElementById('amount').value;
+            const description = document.getElementById('description').value;
+            const category = document.getElementById('category').value;
+    
+            const response = await fetch('/api/expenses', {
+                method: 'POST',
+                headers: {
+                    'Authorization': token,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ amount, description, category })
+            });
+    
+            if (!response.ok) {
+                const error = await response.json();
+                alert(error.message);
+                return;
+            }
+    
+            await fetchExpenses(currentPage);
+            expenseForm.reset();
+        });
+    
+        // Handle showing leaderboard
+        showLeaderboardButton.addEventListener('click', async () => {
+            await updateLeaderboard();
+            leaderboard.style.display = 'block';
+        });
+    
+        const updateLeaderboard = async () => {
+            const response = await fetch('/api/leaderboard', {
+                method: 'GET',
+                headers: {
+                    'Authorization': token,
+                    'Content-Type': 'application/json'
+                }
+            });
+    
+            if (!response.ok) {
+                const error = await response.json();
+                alert(error.message);
+                return;
+            }
+    
+            const leaderboardData = await response.json();
+            leaderboardList.innerHTML = '';
+            leaderboardData.forEach(user => {
+                const li = document.createElement('li');
+                li.textContent = `${user.name} - Total Expenses: ${user.total_expenses}`;
+                leaderboardList.appendChild(li);
+            });
+        };
+    
+        viewInsightsButton.addEventListener('click', async () => {
+            const response = await fetch('/api/expenses/all-monthly', {
+                method: 'GET',
+                headers: {
+                    'Authorization': token,
+                    'Content-Type': 'application/json'
+                }
+            });
+    
+            if (!response.ok) {
+                const error = await response.json();
+                alert(error.message);
+                return;
+            }
+    
+            const { expenses, totalExpenses } = await response.json();
+            localStorage.setItem('monthlyExpenses', JSON.stringify(expenses));
+            localStorage.setItem('totalExpenses', totalExpenses);
+            window.location.href = '/html/insights.html';
+            
         });
 
-        if (!response.ok) {
-            const error = await response.json();
-            alert(error.message);
-            return;
-        }
-
-        const expenses = await response.json();
-        localStorage.setItem('monthlyExpenses', JSON.stringify(expenses));
-        window.location.href = '/html/insights.html';
+        expensesPerPageSelect.addEventListener('change', async () => {
+            expensesPerPage = expensesPerPageSelect.value;
+            localStorage.setItem('expensesPerPage', expensesPerPage);
+            await fetchExpenses(currentPage);
+        });
     });
-});

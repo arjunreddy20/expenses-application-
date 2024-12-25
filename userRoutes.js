@@ -12,6 +12,7 @@ router.get('/expenses/yearly', userAuthentication, ExpenseController.getYearlyEx
 router.get('/notes', userAuthentication, NoteController.getNotes);
 router.get('/expenses/download', userAuthentication, ExpenseController.downloadExpenses);
 router.post('/expenses', userAuthentication, ExpenseController.addExpense);
+router.get('/expenses/all-monthly', userAuthentication, ExpenseController.getAllMonthlyExpenses);
 router.delete('/expenses/monthly/:id', userAuthentication, ExpenseController.deleteExpense);
 router.get('/expenses/download-urls', userAuthentication, async (req, res) => {
     try {
